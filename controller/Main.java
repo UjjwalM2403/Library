@@ -12,26 +12,48 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         LibraryService service = new LibraryService();
 
-        User demoUser = new User("Alice", 1, 25, "1234567890", "Delhi");
+        // Demo data
+        LibraryRepository.users.add(new User("Alice", 1, 25, "1234567890", "Delhi"));
         Librarian demoLibrarian = new Librarian("Mr. Sharma", "Delhi Central", "9876543210");
 
-        LibraryRepository.users.add(demoUser);
-
-        int choice;
+        int choice=-1;
         do {
-            System.out.println("\n====== Library Management System ======");
-            System.out.println("1. Login as User");
-            System.out.println("2. Login as Librarian");
-            System.out.println("0. Exit");
-            System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
-            sc.nextLine();
+            try {
+                System.out.println("\n====== Library Management System ======");
+                System.out.println("1. Login as User");
+                System.out.println("2. Login as Librarian");
+                System.out.println("0. Exit");
+                System.out.print("Enter your choice: ");
+                choice = Integer.parseInt(sc.nextLine());
 
-            switch (choice) {
-                case 1 -> service.userActions(demoUser);
-                case 2 -> service.librarianActions(demoLibrarian);
-                case 0 -> System.out.println("Exiting system. Goodbye!");
-                default -> System.out.println("Invalid choice! Please try again.");
+                switch (choice) {
+                    case 1 -> {
+                        System.out.print("Enter your User ID: ");
+                        int userId = Integer.parseInt(sc.nextLine());
+
+                        User existingUser = LibraryRepository.users.stream()
+                                .filter(u -> u.getId() == userId)
+                                .findFirst()
+                                .orElse(null);
+
+                        if (existingUser != null) {
+                            service.userActions(existingUser);
+                        } else {
+                            System.out.println("⚠ User not found with ID: " + userId);
+                        }
+                    }
+
+                    case 2 -> service.librarianActions(demoLibrarian);
+
+                    case 0 -> System.out.println("Exiting system. Goodbye!");
+
+                    default -> System.out.println("Invalid choice! Please try again.");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("⚠ Invalid input. Please enter a valid number.");
+            } catch (Exception e) {
+                System.out.println("⚠ Unexpected error: " + e.getMessage());
             }
         } while (choice != 0);
     }

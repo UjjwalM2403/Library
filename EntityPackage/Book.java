@@ -3,19 +3,14 @@ package EntityPackage;
 public class Book {
 	private String title;
 	private String author;
-	private String isbn;
-	private String publication;
 	private double price;
 	private String genre;
 	private int quantity;
 //    private double rating;
 
-	public Book(String title, String author, String isbn, String publication, double price, String genre, int quantity,
-			double rating) {
+	public Book(String title, String author, double price, String genre, int quantity) {
 		this.title = title;
 		this.author = author;
-		this.isbn = isbn;
-		this.publication = publication;
 		this.price = price;
 		this.genre = genre;
 		this.quantity = quantity;
@@ -29,8 +24,6 @@ public class Book {
 	public void displayDetails() {
 		System.out.println("Title: " + title);
 		System.out.println("Author: " + author);
-		System.out.println("ISBN: " + isbn);
-		System.out.println("Publication: " + publication);
 		System.out.println("Price: ₹" + price);
 		System.out.println("Genre: " + genre);
 		System.out.println("Quantity: " + quantity);
