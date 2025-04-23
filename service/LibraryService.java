@@ -14,8 +14,27 @@ public class LibraryService {
     public LibraryService() {
         this.sc = new Scanner(System.in);
     }
+    private int parseIntSafe(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("⚠ Invalid integer input: '" + input + "'. Defaulting to 0.");
+            return 0;
+        }
+    }
+    
+    private double parseDoubleSafe(String input) {
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            System.out.println("⚠ Invalid decimal input: '" + input + "'. Defaulting to NaN.");
+            return Double.NaN;
+        }
+    }
+    
 
     public void userActions(User user) {
+        
         int choice = -1;
         do {
             try {
@@ -44,8 +63,8 @@ public class LibraryService {
                     case 3 -> user.viewBorrowedBooks();
                     case 5 -> {
                         System.out.print("Enter fine amount: ");
-                        double fine = sc.nextDouble();
-                        sc.nextLine();
+                        String fineInput = sc.nextLine();
+                        double fine = parseDoubleSafe(fineInput);
                         user.payFine(fine);
                     }
                     default -> System.out.println("Invalid choice.");
@@ -61,6 +80,7 @@ public class LibraryService {
     }
 
     public void librarianActions(Librarian librarian) {
+        
         int choice = -1;
         do {
             try {
@@ -131,19 +151,25 @@ public class LibraryService {
                     case 5 -> {
                         System.out.print("Enter user name: ");
                         String name = sc.nextLine();
+                        
                         System.out.print("ID: ");
-                        int id = sc.nextInt();
+                        String idInput = sc.nextLine();
+                        int id = parseIntSafe(idInput);
+                    
                         System.out.print("Age: ");
-                        int age = sc.nextInt();
-                        sc.nextLine();
+                        String ageInput = sc.nextLine();
+                        int age = parseIntSafe(ageInput);
+                    
                         System.out.print("Contact: ");
                         String contact = sc.nextLine();
+                    
                         System.out.print("Address: ");
                         String address = sc.nextLine();
-
+                    
                         User user = new User(name, id, age, contact, address);
                         librarian.addUser(user);
                     }
+                    
 
                     case 6 -> {
                         System.out.print("Enter user ID to remove: ");
