@@ -5,7 +5,10 @@ import EntityPackage.Librarian;
 import EntityPackage.User;
 import repository.LibraryRepository;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -42,6 +45,7 @@ public class LibraryService {
                 System.out.println("1. Borrow Book");
                 System.out.println("2. Return Book");
                 System.out.println("3. View Borrowed Books");
+                System.out.println("4. Sort Books");
                 System.out.println("5. Pay Fine");
                 System.out.println("0. Exit");
                 System.out.print("Enter choice: ");
@@ -53,7 +57,7 @@ public class LibraryService {
                     case 1 -> {
                         System.out.print("Enter book title to borrow: ");
                         String title = sc.nextLine();
-                        user.borrowedBooks(title);
+                        user.chooseBook(title);
                     }
 
                     case 2 -> {
@@ -63,6 +67,31 @@ public class LibraryService {
                     }
 
                     case 3 -> user.viewBorrowedBooks();
+
+                    case 4 -> {
+                        System.out.println("\n--- Sort Books ---");
+                        System.out.println("1. Sort by Title");
+                        System.out.println("2. Sort by Genre");
+                        System.out.println("3. Sort by Price");
+                        System.out.print("Enter sorting choice: ");
+                        String sortInput = sc.nextLine();
+                        int sortChoice = parseIntSafe(sortInput);
+
+                        List<Book> sortedBooks = new ArrayList<>(LibraryRepository.books);
+
+                        switch (sortChoice) {
+                            case 1 -> sortedBooks.sort(Comparator.comparing(Book::getTitle));
+                            case 2 -> sortedBooks.sort(Comparator.comparing(Book::getGenre));
+                            case 3 ->
+                                sortedBooks.sort(Comparator.comparingDouble(book -> book.getPrice().doubleValue()));
+                            default -> System.out.println("⚠ Invalid sorting choice.");
+                        }
+
+                        System.out.println("\n--- Sorted Books ---");
+                        for (Book book : sortedBooks) {
+                            System.out.println(book);
+                        }
+                    }
 
                     case 5 -> {
                         System.out.print("Enter fine amount: ");
@@ -91,9 +120,10 @@ public class LibraryService {
                 System.out.println("1. Add Book");
                 System.out.println("2. Remove Book");
                 System.out.println("3. Find Book");
-                System.out.println("4. Filter by Genre");
+                System.out.println("4. Show Books");
                 System.out.println("5. Add User");
                 System.out.println("6. Remove User");
+                System.out.println("7. Show Users");
                 System.out.println("0. Exit");
                 System.out.print("Enter choice: ");
                 String choiceInput = sc.nextLine();
@@ -138,9 +168,14 @@ public class LibraryService {
                     }
 
                     case 4 -> {
-                        System.out.print("Enter genre to filter: ");
-                        String genre = sc.nextLine();
-                        librarian.filter(genre);
+                        System.out.println("\n--- List of All Books ---");
+                        if (LibraryRepository.books.isEmpty()) {
+                            System.out.println("⚠ No Books present.");
+                        } else {
+                            for (Book book : LibraryRepository.books) {
+                                System.out.println(book);
+                            }
+                        }
                     }
 
                     case 5 -> {
@@ -148,6 +183,13 @@ public class LibraryService {
                         String name = sc.nextLine();
                         System.out.print("ID: ");
                         int id = parseIntSafe(sc.nextLine());
+                        boolean userExists = LibraryRepository.users.stream()
+                                .anyMatch(u -> u.getId() == id);
+
+                        if (userExists) {
+                            System.out.println("⚠ User with ID " + id + " already exists! User not added.");
+                            break;
+                        }
                         System.out.print("Age: ");
                         int age = parseIntSafe(sc.nextLine());
                         System.out.print("Contact: ");
@@ -171,7 +213,16 @@ public class LibraryService {
                             System.out.println("\u26A0 User not found.");
                         }
                     }
-
+                    case 7 -> {
+                        System.out.println("\n--- List of All Users ---");
+                        if (LibraryRepository.users.isEmpty()) {
+                            System.out.println("⚠ No users registered.");
+                        } else {
+                            for (User user : LibraryRepository.users) {
+                                System.out.println(user);
+                            }
+                        }
+                    }
                     default -> System.out.println("Invalid choice.");
                 }
 

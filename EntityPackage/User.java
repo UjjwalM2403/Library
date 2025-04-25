@@ -45,4 +45,12 @@ public class User {
 	public int getId() {
 		return this.id;
 	}
+	@Override
+	public String toString() {
+    return "User ID: " + id +
+           ", Name: " + name +
+           ", Age: " + age +
+           ", Contact: " + contact +
+           ", Address: " + address;
+}
 }

@@ -52,7 +52,20 @@ public class Book {
 	}
 
 	public String getGenre() {
-// TODO Auto-generated method stub
 		return this.genre;
 	}
+	
+	public Double getPrice(){
+		return this.price;
+	}
+
+	@Override
+public String toString() {
+    return "📘 Title: " + title +
+           ", Author: " + author +
+           ", Price: ₹" + price +
+           ", Genre: " + genre +
+           ", Quantity: " + quantity;
+}
+
 }

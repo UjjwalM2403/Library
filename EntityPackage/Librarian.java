@@ -83,4 +83,10 @@ public class Librarian {
 	public String getName() {
 		return this.name;
 	}
+
+	public String toString() {
+		return "Name: " + name +
+			   ", Location: " + location +
+			   ", Contact: " + contact;
+	}
 }
